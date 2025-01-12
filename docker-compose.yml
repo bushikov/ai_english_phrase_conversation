@@ -1,0 +1,20 @@
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    # "-q"で標準出力への出力を抑制、最大限抑制するために３つ指定
+    command: bash -c "pip install --no-cache-dir --upgrade -q -q -q -r requirements.txt && python app.py"
+    volumes:
+      - ./app:/app
+      - ./requirements.txt:/app/requirements.txt
+      - python_libs:/usr/local/lib/python3.12
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2}
+      - LANGCHAIN_PROJECT=${LANGCHAIN_PROJECT}
+      - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
+      - PHRASE_FILE=${PHRASE_FILE}
+
+volumes:
+  python_libs:
