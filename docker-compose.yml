@@ -7,6 +7,7 @@ services:
     command: bash -c "pip install --no-cache-dir --upgrade -q -q -q -r requirements.txt && python app.py"
     volumes:
       - ./app:/app
+      - ./file:/file
       - ./requirements.txt:/app/requirements.txt
       - python_libs:/usr/local/lib/python3.12
     environment:
