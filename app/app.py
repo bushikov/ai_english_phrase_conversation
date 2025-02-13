@@ -8,11 +8,14 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from conversation_generator import Conversation, ConversationGenerator
 from question_generator import QuestionGenerator
 from judge import Judge
+from speech import Speech
+
+REPO_PATH = "/speeches"
 
 def read_csv(file_path: str) -> list[str]:
     phrases = []
     with open(file_path, "r", encoding="utf-8") as file:
-        reader = csv.DictReader(file)
+        reader = csv.DictReader(file, delimiter='\t')
         for row in reader:
             phrases.append(row["english"])
 
@@ -28,6 +31,9 @@ def main():
 
     user_input = None
     retry_count = 0
+    speech = None
+    speech_choice = "s: speech, " if os.getenv("ELEVEN_LABS_API_KEY") else ''
+
     while True:
         try:
             if user_input is None:
@@ -46,7 +52,7 @@ def main():
                 for c in question_generator.get_question():
                     print(c)
 
-            print("\n(q: quit, a: answer, h: hint, j: janapese, n: next question) => ", end="")
+            print(f"\n(q: quit, a: answer, h: hint, j: janapese, {speech_choice}n: next question) => ", end="")
             user_input = input()
 
             match user_input.lower():
@@ -63,6 +69,10 @@ def main():
                 case "j":
                     print("### Japanese")
                     print(question_generator.get_japanese())
+                case "s":
+                    if not speech:
+                        speech = Speech(api_key=os.environ["ELEVEN_LABS_API_KEY"], repo_path=REPO_PATH)
+                    speech.run(conversation.phrase)
                 case "n":
                     user_input = None
                 case "":

@@ -8,14 +8,17 @@ services:
     volumes:
       - ./app:/app
       - ./file:/file
+      - ./speeches:/speeches
       - ./requirements.txt:/app/requirements.txt
       - python_libs:/usr/local/lib/python3.12
+    # .envファイルから環境変数を読み込む
     environment:
       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
       - LANGCHAIN_TRACING_V2=${LANGCHAIN_TRACING_V2}
       - LANGCHAIN_PROJECT=${LANGCHAIN_PROJECT}
       - LANGCHAIN_API_KEY=${LANGCHAIN_API_KEY}
       - PHRASE_FILE=${PHRASE_FILE}
+      - ELEVEN_LABS_API_KEY=${ELEVEN_LABS_API_KEY}
 
 volumes:
   python_libs:
